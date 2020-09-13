@@ -1,6 +1,7 @@
 package com.greak.springboot.bean;
 
-import java.util.Date;
+
+import java.sql.Date;
 
 public class Employee {
 
@@ -10,8 +11,20 @@ public class Employee {
     private String email;
     //1 male, 0 female
     private Integer gender;
-    private Department department;
+    private String department;
     private Date birth;
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", gender=" + gender +
+                ", department='" + department + '\'' +
+                ", birth=" + birth +
+                '}';
+    }
 
     public Integer getId() {
         return id;
@@ -45,11 +58,11 @@ public class Employee {
         this.gender = gender;
     }
 
-    public Department getDepartment() {
+    public String getDepartment() {
         return department;
     }
 
-    public void setDepartment(Department department) {
+    public void setDepartment(String department) {
         this.department = department;
     }
 
@@ -60,31 +73,16 @@ public class Employee {
     public void setBirth(Date birth) {
         this.birth = birth;
     }
-    public Employee(Integer id, String lastName, String email, Integer gender,
-                    Department department) {
-        super();
+
+    public Employee(Integer id, String lastName, String email, Integer gender, String department, Date birth) {
         this.id = id;
         this.lastName = lastName;
         this.email = email;
         this.gender = gender;
         this.department = department;
-        this.birth = new Date();
+        this.birth = birth;
     }
 
     public Employee() {
     }
-
-    @Override
-    public String toString() {
-        return "Employee{" +
-                "id=" + id +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", gender=" + gender +
-                ", department=" + department +
-                ", birth=" + birth +
-                '}';
-    }
-	
-	
 }
