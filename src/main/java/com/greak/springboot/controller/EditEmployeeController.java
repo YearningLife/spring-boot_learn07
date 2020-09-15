@@ -29,8 +29,6 @@ public class EditEmployeeController {
     public Employee selectEmpById(@PathVariable("id") Integer id){
         // System.out.println("方法："+Thread.currentThread().getStackTrace()[1].getMethodName()+"  查询条件 ："+id);
         Employee employee = employeeService.selectDepById(id);
-        // System.out.println("查询结果"+employee.toString());
-        // System.out.println(Thread.currentThread().getStackTrace()[1].getMethodName()+"查询出来的结果为"+employee.toString());
         return employee;
     }
 

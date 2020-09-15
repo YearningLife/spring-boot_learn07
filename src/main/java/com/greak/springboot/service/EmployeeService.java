@@ -7,6 +7,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,6 +27,9 @@ public class EmployeeService {
 
     @Autowired
     EmployeeMapper employeeMapper;
+
+    @Autowired
+    RedisTemplate redisTemplate;
 
 
     /*

@@ -1,9 +1,16 @@
 package com.greak.springboot.bean;
 
 
+import java.io.Serializable;
 import java.sql.Date;
-
-public class Employee {
+/**
+ *
+ * @description: TODO 员工表,向redis存储数据时，需要序列化
+ * @author: zero
+ * @date: 2020/9/15
+ * @version: 1.0
+ */
+public class Employee implements Serializable {
 
 	private Integer id;
     private String lastName;

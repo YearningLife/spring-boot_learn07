@@ -1,12 +1,14 @@
 package com.greak.springboot.bean;
 
+import java.io.Serializable;
+
 /**
- * @description: TODO 创建个人信息表
+ * @description: TODO 创建个人信息表,向redis存储数据时，需要序列化
  * @author: zero
  * @date: 2020/9/10 22:15
  * @version: 1.0
  */
-public class User {
+public class User implements Serializable {
     private Integer id;
     private String lastName;
     private String documentId;

@@ -1,6 +1,14 @@
 package com.greak.springboot.bean;
 
-public class Department {
+import java.io.Serializable;
+/**
+ *
+ * @description: TODO 部门表,向redis存储数据时，需要序列化
+ * @author: zero
+ * @date: 2020/9/15
+ * @version: 1.0
+ */
+public class Department implements Serializable {
 
 	private Integer id;
 	private String departmentName;
