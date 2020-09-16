@@ -26,7 +26,7 @@ class SpringBootLearn07ApplicationTests {
     RedisTemplate redisTemplate;//键值对都是对象
 
     @Autowired
-    RedisTemplate<Object, Employee> empRedisTemplate;
+    RedisTemplate<Object, Object> custRedisTemplate;
 
     @Test
     void contextLoads() {
@@ -88,9 +88,9 @@ class SpringBootLearn07ApplicationTests {
     void testRedisCustomer(){
         Employee employee = employeeMapper.selectEmpById(2);
         //step1 .想redis中插入一个set集合
-        empRedisTemplate.opsForValue().set("emp_03",employee);
+        custRedisTemplate.opsForValue().set("emp_03",employee);
         //step2 .获取该结果
-        String emp_02 = stringRedisTemplate.opsForValue().get("emp_02");
+        String emp_02 = stringRedisTemplate.opsForValue().get("emp_03");
         //step3 .发现为null
         System.out.println("打印redis数据："+emp_02);
     }

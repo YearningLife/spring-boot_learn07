@@ -47,7 +47,7 @@ public class EmployeeService {
      *  3.  key/keyGenerator  二选一，键值对中的键值
      *  4.  condition ，筛选条件，符合条件的才会进行缓存,不符合数据库的值须在数据库中查询
      */
-    @Cacheable(cacheNames="depCache",condition = "#integer > 3")
+    @Cacheable(cacheNames="depCache",condition = "#integer > 1" ,keyGenerator="oneKeyGenerator")
     public Employee selectDepById(Integer integer){
         Employee employee = employeeMapper.selectEmpById(integer);
         System.out.println(Thread.currentThread().getStackTrace()[1].getMethodName()+"查询出来的结果为"+employee.toString());
@@ -55,7 +55,7 @@ public class EmployeeService {
     }
 
 
-    @Cacheable(cacheNames="depCache")
+    @Cacheable(cacheNames="depCache",keyGenerator="oneKeyGenerator")
     public List<Employee> selectAllEmp() {
         List<Employee> empList = employeeMapper.selectAll();
         Iterator<Employee> iterator = empList.iterator();
@@ -109,7 +109,7 @@ public class EmployeeService {
      * @author zero
      * @date: 2020/9/13 15:56
      */
-    @CachePut(value = "depCache")
+    @CachePut(value = "depCache",keyGenerator="oneKeyGenerator")
     public void insertEmp(Employee employee){
 
         employeeMapper.insertEmp(employee);
