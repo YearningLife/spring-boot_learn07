@@ -3,13 +3,16 @@ package com.greak.springboot.config;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.greak.springboot.bean.Department;
 import com.greak.springboot.bean.Employee;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
@@ -19,6 +22,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * @description: TODO 自定义redis的config信息
@@ -63,24 +67,35 @@ public class CustomizeRedisConfig {
      * @date: 2020/9/15 22:39
      */
     @Bean
-    public RedisTemplate<Object, Object> custRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<Object, Object> template = new RedisTemplate<>();
+    public RedisTemplate<Object, Employee> custRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<Object, Employee> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
         //设置默认的序列化信息
-        Jackson2JsonRedisSerializer<Object> jsonRedisSerializer = new Jackson2JsonRedisSerializer<Object>(Object.class);
+        Jackson2JsonRedisSerializer<Employee> jsonRedisSerializer = new Jackson2JsonRedisSerializer<Employee>(Employee.class);
         template.setDefaultSerializer(jsonRedisSerializer);
         return template;
     }
 
+    @Bean
+    public RedisTemplate<Object, Department> depRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<Object, Department> template = new RedisTemplate<>();
+        template.setConnectionFactory(redisConnectionFactory);
+        //设置默认的序列化信息
+        Jackson2JsonRedisSerializer<Department> jsonRedisSerializer = new Jackson2JsonRedisSerializer<Department>(Department.class);
+        template.setDefaultSerializer(jsonRedisSerializer);
+        return template;
+    }
     /*
      *
      * @description: TODO 实现缓存数据json化
      *                参考链接： https://blog.csdn.net/sixteen_/article/details/104876420
+     *                 过程较为复杂，未理解，暂不考虑
      * @param: factory
      * @return: org.springframework.cache.CacheManager
      * @author zero
      * @date: 2020/9/16 21:01
      */
+    /*
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory factory) {
         RedisSerializer<String> redisSerializer = new StringRedisSerializer();
@@ -99,6 +114,45 @@ public class CustomizeRedisConfig {
 
         return  RedisCacheManager.builder(factory).cacheDefaults(config).build();
     }
+    */
 
+    /*
+     *
+     * @description: TODO 自定义实现cachemanager
+     *                参考链接： https://blog.51cto.com/14819639/2502952
+     *                @Primary 当存在多个cachemanager时，需要指定一个默认值
+     * @param: employeeRedisTemplate
+     * @return: org.springframework.cache.CacheManager
+     * @author zero
+     * @date: 2020/9/17 23:28
+     */
+    @Primary
+    @Bean
+    public CacheManager empCacheManage(RedisTemplate<Object, Employee> employeeRedisTemplate){
+
+        RedisCacheWriter redisCacheWriter = RedisCacheWriter.nonLockingRedisCacheWriter(Objects.requireNonNull(employeeRedisTemplate.getConnectionFactory()));
+
+        Jackson2JsonRedisSerializer<Employee> serializer = new Jackson2JsonRedisSerializer<>(Employee.class);
+
+        RedisSerializationContext<Employee, Employee> serializationContext = RedisSerializationContext.fromSerializer(serializer);
+
+        RedisCacheConfiguration redisCacheConfiguration =  RedisCacheConfiguration.defaultCacheConfig().serializeValuesWith(serializationContext.getValueSerializationPair());
+
+        return new RedisCacheManager(redisCacheWriter,redisCacheConfiguration);
+    }
+
+    @Bean
+    public CacheManager depCacheManage(RedisTemplate<Object, Department> depRedisTemplate){
+
+        RedisCacheWriter redisCacheWriter = RedisCacheWriter.nonLockingRedisCacheWriter(Objects.requireNonNull(depRedisTemplate.getConnectionFactory()));
+
+        Jackson2JsonRedisSerializer<Department> serializer = new Jackson2JsonRedisSerializer<>(Department.class);
+
+        RedisSerializationContext<Department, Department> serializationContext = RedisSerializationContext.fromSerializer(serializer);
+
+        RedisCacheConfiguration redisCacheConfiguration =  RedisCacheConfiguration.defaultCacheConfig().serializeValuesWith(serializationContext.getValueSerializationPair());
+
+        return new RedisCacheManager(redisCacheWriter,redisCacheConfiguration);
+    }
 
 }

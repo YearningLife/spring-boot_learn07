@@ -21,7 +21,7 @@ import java.util.List;
  * @date: 2020/9/10 23:02
  * @version: 1.0
  */
-// @CacheConfig(cacheNames = {"depCache"})
+@CacheConfig(/*cacheNames = {"depCache"}*/ cacheManager = "empCacheManage")
 @Service
 public class EmployeeService {
 

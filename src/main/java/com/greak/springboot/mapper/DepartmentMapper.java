@@ -1,10 +1,7 @@
 package com.greak.springboot.mapper;
 
 import com.greak.springboot.bean.Department;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 /**
  * @description: TODO department 映射文件
@@ -12,13 +9,13 @@ import org.apache.ibatis.annotations.Update;
  * @date: 2020/9/10 22:20
  * @version: 1.0
  */
-// @Mapper
+ @Mapper
 public interface DepartmentMapper {
 
-    @Select("SELECT * FROM DEPARTMENT WHERE ID = #{id}")
+    @Select("SELECT * FROM department WHERE ID = #{id}")
     public Department selectDepById(Integer id) ;
 
-    @Select("SELECT * FROM DEPARTMENT")
+    @Select("SELECT * FROM department")
     public Department selectAllDep();
 
     @Update("update department set departmentName = #{departmentName} where id = #{id}")
