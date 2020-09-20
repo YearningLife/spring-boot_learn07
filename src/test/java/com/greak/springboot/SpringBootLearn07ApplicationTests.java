@@ -1,5 +1,6 @@
 package com.greak.springboot;
 
+import com.greak.springboot.bean.Book;
 import com.greak.springboot.bean.Employee;
 
 import com.greak.springboot.mapper.EmployeeMapper;
@@ -109,6 +110,7 @@ class SpringBootLearn07ApplicationTests {
      *
      * @description: TODO 测试rabbitmq消息发送
      *                相关简介： 参考 CustomizeRabbitMqConfig 中注释内容
+     *                单播模式，点对点消息队列
      * @param: null
      * @return:
      * @author zero
@@ -130,6 +132,7 @@ class SpringBootLearn07ApplicationTests {
      *
      * @description: TODO 测试rabbitmq中消息接收
      *                相关简介： 参考 CustomizeRabbitMqConfig 中注释内容
+     *                单播模式，点对点消息队列
      * @param:
      * @return: void
      * @author zero
@@ -141,5 +144,34 @@ class SpringBootLearn07ApplicationTests {
         Object o = rabbitTemplate.receiveAndConvert("starbucks.news");
         System.out.println(o.getClass());
         System.out.println(o);
+    }
+
+    /*
+     * @referLink：
+     * @description: TODO  测试广播模式
+     *                与 exchange.fanout 绑定的 所有 mq 队列都可以收到消息，所以 第二个参数：Routing key  不会起到作用
+     * @param:
+     * @return: void
+     * @author zero
+     * @date: 2020/9/20 19:31
+     */
+    @Test
+    public void sendBookMq(){
+        rabbitTemplate.convertAndSend("exchange.fanout","",new Book("三国演义","罗贯中"));
+    }
+
+    /*
+     * @referLink：
+     * @description: TODO 接收广播模式的消息队列，该方法是否正确，需要验证
+     * @param:
+     * @return: void
+     * @author zero
+     * @date: 2020/9/20 19:42
+     */
+    @Test
+    public void receiveBookMq(){
+        System.out.println("接收到广播模式fanout的消息队列");
+        Book book = (Book) rabbitTemplate.receiveAndConvert("starbucks.news");
+        System.out.println(book.toString());
     }
 }
