@@ -19,6 +19,7 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import sun.rmi.runtime.Log;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -47,9 +48,23 @@ public class CustomizeRedisConfig {
         return  new KeyGenerator() {
 
             @Override
-            public Object generate(Object o, Method method, Object... objects) {
+            public Object generate(Object target, Method method, Object... params) {
 
-                return "KeyGenerator:"+method.getName();
+                // return "KeyGenerator:"+method.getName();
+                StringBuilder sb = new StringBuilder();
+                sb.append(target.getClass().getName());
+                sb.append(",Method:");
+                sb.append(method.getName());
+                sb.append(",Params[");
+                for (int i = 0; i < params.length; i++) {
+                    sb.append(params[i].toString());
+                    if (i != (params.length - 1)) {
+                        sb.append(",");
+                    }
+                }
+                sb.append("]");
+                // Log.debug("Data Caching Redis Key : {}", sb.toString());
+                return sb.toString();
 
             }
         };

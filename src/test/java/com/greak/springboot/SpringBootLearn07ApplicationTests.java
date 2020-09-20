@@ -6,11 +6,19 @@ import com.greak.springboot.mapper.EmployeeMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageProperties;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -27,6 +35,9 @@ class SpringBootLearn07ApplicationTests {
 
     @Autowired
     RedisTemplate<Object, Object> custRedisTemplate;
+
+    @Autowired
+    RabbitTemplate rabbitTemplate;
 
     @Test
     void contextLoads() {
@@ -93,5 +104,42 @@ class SpringBootLearn07ApplicationTests {
         String emp_02 = stringRedisTemplate.opsForValue().get("emp_03");
         //step3 .发现为null
         System.out.println("打印redis数据："+emp_02);
+    }
+    /*
+     *
+     * @description: TODO 测试rabbitmq消息发送
+     *                相关简介： 参考 CustomizeRabbitMqConfig 中注释内容
+     * @param: null
+     * @return:
+     * @author zero
+     * @date: 2020/9/20 18:45
+     */
+
+    @Test
+    public void sendRabbitMq(){
+        Map<String,Object> map = new HashMap<>();
+        map.put("msg","这是第2个 Rabbit消息 ");
+        map.put("sms", Arrays.asList("短信发送",123,true));
+        //第一种方式，最后一个参数只能为message，所以需要转化
+        //Message message = rabbitTemplate.getMessageConverter().toMessage(map, new MessageProperties());
+        //rabbitTemplate.send("exchange.direct","starbucks.news", message);
+        //第二种方式，最后一个参数为为object，所以直接为map就可以
+        rabbitTemplate.convertAndSend("exchange.direct","starbucks.news", map);
+    }
+    /*
+     *
+     * @description: TODO 测试rabbitmq中消息接收
+     *                相关简介： 参考 CustomizeRabbitMqConfig 中注释内容
+     * @param:
+     * @return: void
+     * @author zero
+     * @date: 2020/9/20 19:00
+     */
+    @Test
+    public void receiveRabbitMq(){
+        System.out.println("测试mq配置消息");
+        Object o = rabbitTemplate.receiveAndConvert("starbucks.news");
+        System.out.println(o.getClass());
+        System.out.println(o);
     }
 }
