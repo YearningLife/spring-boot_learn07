@@ -1,6 +1,7 @@
 package com.greak.springboot;
 
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
@@ -24,7 +25,8 @@ import org.springframework.cache.annotation.EnableCaching;
  */
 
 @MapperScan("com.greak.springboot.mapper")
-@EnableCaching
+@EnableRabbit //启用rabbit mq注解
+@EnableCaching//启用redis 注解
 @SpringBootApplication
 public class SpringBootLearn07Application {
 

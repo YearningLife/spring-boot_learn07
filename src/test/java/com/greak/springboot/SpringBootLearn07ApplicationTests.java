@@ -2,16 +2,16 @@ package com.greak.springboot;
 
 import com.greak.springboot.bean.Book;
 import com.greak.springboot.bean.Employee;
-
 import com.greak.springboot.mapper.EmployeeMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.core.MessageProperties;
+import org.springframework.amqp.core.AmqpAdmin;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.Binding.DestinationType;
+import org.springframework.amqp.core.FanoutExchange;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -39,6 +39,9 @@ class SpringBootLearn07ApplicationTests {
 
     @Autowired
     RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    AmqpAdmin amqpAdmin;
 
     @Test
     void contextLoads() {
@@ -157,7 +160,7 @@ class SpringBootLearn07ApplicationTests {
      */
     @Test
     public void sendBookMq(){
-        rabbitTemplate.convertAndSend("exchange.fanout","",new Book("三国演义","罗贯中"));
+        rabbitTemplate.convertAndSend("exchange.fanout","",new Book("红楼梦","曹雪芹"));
     }
 
     /*
@@ -171,7 +174,23 @@ class SpringBootLearn07ApplicationTests {
     @Test
     public void receiveBookMq(){
         System.out.println("接收到广播模式fanout的消息队列");
-        Book book = (Book) rabbitTemplate.receiveAndConvert("starbucks.news");
-        System.out.println(book.toString());
+        //Book book = (Book) rabbitTemplate.receiveAndConvert("starbucks.news");
+        //System.out.println(book.toString());
+    }
+    /*
+     * @referLink： 视频： https://www.bilibili.com/video/BV1Et411Y7tQ?p=90
+     *             方法链接： https://blog.csdn.net/level_Tiller/article/details/103401716
+     * @description: TODO amqpAdmin 为 RabbitAutoConfiguration 中的方法
+     *                1. 创建exchange、queue、已经将两者绑定起来
+     * @param:
+     * @return: void
+     * @author zero
+     * @date: 2020/9/21 21:59
+     */
+    @Test
+    public void createMq(){
+        amqpAdmin.declareExchange(new FanoutExchange("amqpAdmin.fanout"));//创建exchange
+        amqpAdmin.declareQueue(new Queue("amqpAdmin.users"));
+        amqpAdmin.declareBinding(new Binding("amqpAdmin.users",DestinationType.QUEUE,"amqpAdmin.fanout","amqpAdmin.emp" ,null));//将exchange与queue绑定在一起
     }
 }

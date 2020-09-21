@@ -21,6 +21,7 @@ import org.springframework.context.annotation.Configuration;
  *                              rabbitTemplate.receiveAndConvert
  *                     5. 自定义方法message擦converter方法，参考 RabbitTemplateConfigurer rabbitTemplateConfigurer 中的
  *                          configurer.setMessageConverter((MessageConverter)messageConverter.getIfUnique());
+ *                     6. 开启注解，参考 BookRabbitMqService 中的解释
  * @author: zero
  * @date: 2020/9/20 18:32
  * @version: 1.0
