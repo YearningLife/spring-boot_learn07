@@ -63,6 +63,13 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
         <!--生成 KeyGenerator用，工具类-->
+        <!--springboot 结合 spring-boot-starter-mail 使用-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+            <version>2.3.5.RELEASE</version>
+        </dependency>
+        <!--springboot 结合 spring-boot-starter-mail 使用-->
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>

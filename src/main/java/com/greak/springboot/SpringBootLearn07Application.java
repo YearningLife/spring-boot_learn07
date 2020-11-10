@@ -5,6 +5,8 @@ import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.scheduling.annotation.EnableScheduling;
+
 /**
  *
  * @description: TODO springboot主配置类的启动器
@@ -27,6 +29,7 @@ import org.springframework.cache.annotation.EnableCaching;
 @MapperScan("com.greak.springboot.mapper")
 @EnableRabbit //启用rabbit mq注解
 @EnableCaching//启用redis 注解
+@EnableScheduling//启用定时任务
 @SpringBootApplication
 public class SpringBootLearn07Application {
 

@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
@@ -42,6 +44,9 @@ class SpringBootLearn07ApplicationTests {
 
     @Autowired
     AmqpAdmin amqpAdmin;
+
+    @Autowired
+    JavaMailSenderImpl javaMailSender;
 
     @Test
     void contextLoads() {
@@ -192,5 +197,22 @@ class SpringBootLearn07ApplicationTests {
         amqpAdmin.declareExchange(new FanoutExchange("amqpAdmin.fanout"));//创建exchange
         amqpAdmin.declareQueue(new Queue("amqpAdmin.users"));
         amqpAdmin.declareBinding(new Binding("amqpAdmin.users",DestinationType.QUEUE,"amqpAdmin.fanout","amqpAdmin.emp" ,null));//将exchange与queue绑定在一起
+    }
+    /**
+     * @referLink：
+     * @description: TODO 测试邮件发送，发送失败，待核查
+     *                  日志中报送：535 Login fail. Authorization code is expired
+     * @author: zero
+     * @date: 2020/11/10
+     * @version: 1.0
+     */
+    @Test
+    public void sendMail(){
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setSubject("测试-邮件发送");
+
+        message.setText("明天去吃饭");
+
+        javaMailSender.send(message);
     }
 }
