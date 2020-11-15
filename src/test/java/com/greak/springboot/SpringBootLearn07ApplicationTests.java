@@ -17,8 +17,12 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -201,18 +205,33 @@ class SpringBootLearn07ApplicationTests {
     /**
      * @referLink：
      * @description: TODO 测试邮件发送，发送失败，待核查
-     *                  日志中报送：535 Login fail. Authorization code is expired
+     *                  参考链接： https://www.jianshu.com/p/5eb000544dd7
      * @author: zero
      * @date: 2020/11/10
      * @version: 1.0
      */
     @Test
     public void sendMail(){
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setSubject("测试-邮件发送");
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setFrom("qipengfly@qq.com");
+        simpleMailMessage.setTo("qipengfly@126.com");
+        simpleMailMessage.setSubject("Happy New Year");
+        simpleMailMessage.setText("新年快乐！");
+        javaMailSender.send(simpleMailMessage);
+        System.out.println("邮件发送成功");
+    }
 
-        message.setText("明天去吃饭");
-
-        javaMailSender.send(message);
+    @Test
+    public void complex() throws MessagingException {
+        //复杂邮件
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage,true);
+        messageHelper.setFrom("demo@qq.com");
+        messageHelper.setTo("momj@126.com");
+        messageHelper.setSubject("2020_快点过去吧");
+        messageHelper.setText("疫情！");
+        messageHelper.addInline("dog.jpg", new File("C:\\Users\\zero\\Desktop\\dog.jpg"));
+        javaMailSender.send(mimeMessage);
+        System.out.println("测试复杂邮件。。。。");
     }
 }

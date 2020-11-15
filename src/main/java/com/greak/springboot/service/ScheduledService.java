@@ -30,7 +30,7 @@ public class ScheduledService {
      * <li>day of week</li>
      * </ul>
      */
-    @Scheduled(cron = "0 0/2 * * * ? ")
+    @Scheduled(cron = "0 15 10 ? * MON-WED,SAT ")
     public void hello(){
         //System.out.println("hello.....");
         System.out.println("测试定时任务。。。。。");
