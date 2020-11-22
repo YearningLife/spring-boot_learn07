@@ -45,7 +45,13 @@
             <scope>test</scope>
         </dependency>
         <!--添加spring security 相关依赖-->
-
+        <!--bean类创建之后，使用yaml类进行赋值-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!--bean类创建之后，使用yaml类进行赋值-->
         <!--添加thymeleaf支持-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
